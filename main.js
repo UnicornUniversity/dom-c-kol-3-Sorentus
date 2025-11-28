@@ -1,4 +1,15 @@
 //TODO add imports if needed
+import {
+  maleNames,
+  femaleNames,
+  maleSurnames,
+  femaleSurnames,
+  workloads
+} from "./src/utilities/data.js";
+
+import { getRandomElement } from "./src/utilities/randomelement.js";
+import { randomBirthDate } from "./src/utilities/randombirthday.js";
+
 //TODO doc
 /**
  * The main function which calls the application. 

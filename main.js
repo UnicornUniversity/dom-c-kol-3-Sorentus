@@ -42,13 +42,19 @@ function getRandomGender() {
     return Math.random() < 0.5 ? "male" : "female";
 }
 
-function randomBirthday(minAge, maxAge) {
+function randomBirthday(minAge, maxAge, usedDates) {
     const now = Date.now();
     const yearMs = 365.25 * 24 * 60 * 60 * 1000;
-    const youngest = now - minAge * yearMs;
-    const oldest = now - maxAge * yearMs;
-    const randomTime = oldest + Math.random() * (youngest - oldest);
-    return new Date(randomTime).toISOString();
+    let birthTime;
+
+    do {
+        const youngest = now - minAge * yearMs;
+        const oldest = now - maxAge * yearMs;
+        birthTime = Math.floor(oldest + Math.random() * (youngest - oldest));
+    } while (usedDates.has(birthTime));
+
+    usedDates.add(birthTime);
+    return new Date(birthTime).toISOString();
 }
 
 function randomWorkload() {
@@ -77,6 +83,7 @@ export function main(dtoIn) {
     validateAgeRange(min, max);
 
     const dtoOut = [];
+    const usedDates = new Set();
 
     for (let i = 0; i < count; i++) {
         const gender = getRandomGender();
@@ -91,7 +98,7 @@ export function main(dtoIn) {
 
         dtoOut.push({
             gender,
-            birthdate: randomBirthday(min, max),
+            birthdate: randomBirthday(min, max, usedDates),
             name,
             surname,
             workload: randomWorkload()

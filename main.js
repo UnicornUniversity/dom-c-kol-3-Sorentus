@@ -33,7 +33,7 @@ const femaleSurnames = [
 
 const workloads = [10, 20, 30, 40];
 
-// Utility functions
+//Utility functions
 function getRandomElement(array) {
     return array[Math.floor(Math.random() * array.length)];
 }
@@ -43,9 +43,10 @@ function getRandomGender() {
 }
 
 function randomBirthday(minAge, maxAge, usedDates) {
-    
+  
     minAge = Math.max(18, minAge);
     maxAge = Math.min(60, maxAge);
+
     const now = Date.now();
     const yearMs = 365.25 * 24 * 60 * 60 * 1000;
     let birthTime;
@@ -64,16 +65,7 @@ function randomWorkload() {
     return getRandomElement(workloads);
 }
 
-//function validateAgeRange(minAge, maxAge) {
-    //if (minAge < 18 || maxAge > 60) {
-      //  throw new Error("Age interval must be within <18, 60>.");
-  //  }
-   // if (minAge > maxAge) {
-   //     throw new Error("Invalid age interval: minAge cannot be greater than maxAge.");
-  //  }
-//}
-
-// Main function
+//Main function
 /**
  * Generates a list of employees with random data.
  * @param {object} dtoIn - Contains count of employees and age range {min, max}.
@@ -82,8 +74,6 @@ function randomWorkload() {
 export function main(dtoIn) {
     const { count, age } = dtoIn;
     const { min, max } = age;
-
-   // validateAgeRange(min, max);
 
     const dtoOut = [];
     const usedDates = new Set();

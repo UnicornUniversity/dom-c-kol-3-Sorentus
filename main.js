@@ -32,8 +32,8 @@ const femaleSurnames = [
 ];
 
 const workloads = [10, 20, 30, 40];
+const DATE_TOLERANCE_MS = (1/12) * 365.25*24*60*60*1000; 
 
-// Utility functions
 function getRandomElement(array) {
     return array[Math.floor(Math.random() * array.length)];
 }
@@ -43,18 +43,13 @@ function getRandomGender() {
 }
 
 function randomBirthday(minAge, maxAge, usedDates) {
-    if (minAge > maxAge) [minAge, maxAge] = [maxAge, minAge];
-    minAge = Math.max(18, minAge);
-    maxAge = Math.min(60, maxAge);
-
     const now = Date.now();
-    const yearMs = 365.25 * 24 * 60 * 60 * 1000;
-    let birthTime;
+    const maxBirth = now - minAge*365.25*24*60*60*1000;
+    const minBirth = now - maxAge*365.25*24*60*60*1000;
 
+    let birthTime;
     do {
-        const youngest = now - minAge * yearMs;
-        const oldest = now - maxAge * yearMs;
-        birthTime = Math.floor(oldest + Math.random() * (youngest - oldest));
+        birthTime = Math.floor(minBirth + Math.random()*(maxBirth-minBirth));
     } while (usedDates.has(birthTime));
 
     usedDates.add(birthTime);
@@ -65,44 +60,32 @@ function randomWorkload() {
     return getRandomElement(workloads);
 }
 
-// Validate age range
-function validateAgeRange(minAge, maxAge) {
-    if (minAge < 18 || maxAge > 60) throw new Error("Age must be within <18, 60>");
-    if (minAge > maxAge) throw new Error("minAge cannot be greater than maxAge");
-}
-
 // Main function
 /**
  * Generates a list of employees with random data.
- * @param {object} dtoIn - { count, age: {min, max} }
+ * @param {object} dtoIn - {count: number, age: {min, max}}
  * @returns {Array} Array of employee objects
  */
 export function main(dtoIn) {
     const { count, age } = dtoIn;
     const { min, max } = age;
 
-    validateAgeRange(min, max);
+    if (min < 18 || max > 60 || min > max) throw new Error("Invalid age interval");
 
     const dtoOut = [];
     const usedDates = new Set();
 
-    for (let i = 0; i < count; i++) {
+    for (let i=0;i<count;i++) {
         const gender = getRandomGender();
-
-        const name = gender === "male"
-            ? getRandomElement(maleNames)
-            : getRandomElement(femaleNames);
-
-        const surname = gender === "male"
-            ? getRandomElement(maleSurnames)
-            : getRandomElement(femaleSurnames);
+        const name = gender === "male" ? getRandomElement(maleNames) : getRandomElement(femaleNames);
+        const surname = gender === "male" ? getRandomElement(maleSurnames) : getRandomElement(femaleSurnames);
 
         dtoOut.push({
             gender,
-            birthdate: randomBirthday(min, max, usedDates),
             name,
             surname,
-            workload: randomWorkload()
+            workload: randomWorkload(),
+            birthdate: randomBirthday(min, max, usedDates)
         });
     }
 

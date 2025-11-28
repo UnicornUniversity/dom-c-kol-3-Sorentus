@@ -29,4 +29,4 @@ const femaleSurnames = [
     "Vávrová","Sýkorová","Tichá","Vondráčková","Kubíková","Slavíková","Ptáčková","Holubová","Hájeková","Vacková"
 ];
 
-const workload = [10, 20, 30, 40];
+const workloads = [10, 20, 30, 40];

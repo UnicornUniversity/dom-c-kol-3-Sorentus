@@ -43,6 +43,9 @@ function getRandomGender() {
 }
 
 function randomBirthday(minAge, maxAge, usedDates) {
+    
+    minAge = Math.max(18, minAge);
+    maxAge = Math.min(60, maxAge);
     const now = Date.now();
     const yearMs = 365.25 * 24 * 60 * 60 * 1000;
     let birthTime;
